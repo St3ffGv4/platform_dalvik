@@ -61,15 +61,6 @@
 #if defined(__ARM_EABI__)
 # define NO_UNALIGN_64__UNION
 #endif
-/*
- * MIPS ABI requires 64-bit alignment for access to 64-bit data types.
- *
- * Use memcpy() to do the transfer
- */
-#if defined(__mips__)
-/* # define NO_UNALIGN_64__UNION */
-#endif
-
 
 //#define LOG_INSTR                   /* verbose debugging */
 /* set and adjust ANDROID_LOG_TAGS='*:i jdwp:i dalvikvm:i dalvikvmi:i' */

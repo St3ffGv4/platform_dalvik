@@ -60,10 +60,6 @@ while expr "x$1" : 'x-J' >/dev/null; do
     shift
 done
 
-if [ "$OSTYPE" = "cygwin" ] ; then
-    jarpath=`cygpath -w  "$libdir/$jarfile"`
-else
-    jarpath="$libdir/$jarfile"
-fi
+jarpath="$libdir/$jarfile"
 
 exec java $javaOpts -jar "$jarpath" "$@"

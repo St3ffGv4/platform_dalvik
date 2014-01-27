@@ -79,11 +79,6 @@ if [ "${defaultMx}" != "no" ]; then
     javaOpts="${javaOpts} ${defaultMx}"
 fi
 
-if [ "$OSTYPE" = "cygwin" ]; then
-    # For Cygwin, convert the jarfile path into native Windows style.
-    jarpath=`cygpath -w "$libdir/$jarfile"`
-else
-    jarpath="$libdir/$jarfile"
-fi
+jarpath="$libdir/$jarfile"
 
 exec java $javaOpts -cp "$jarpath" com.android.dx.merge.DexMerger "$@"

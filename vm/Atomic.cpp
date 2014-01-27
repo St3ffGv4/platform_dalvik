@@ -30,9 +30,6 @@
 #elif defined(__i386__) || defined(__x86_64__)
 #define NEED_PTHREADS_QUASI_ATOMICS 1
 
-#elif defined(__mips__)
-#define NEED_PTHREADS_QUASI_ATOMICS 1
-
 #elif defined(__arm__)
 
 // TODO: Clang can not process our inline assembly at the moment.

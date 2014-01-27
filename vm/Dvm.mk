@@ -190,7 +190,7 @@ LOCAL_SRC_FILES := \
 	test/TestIndirectRefTable.cpp
 
 # TODO: this is the wrong test, but what's the right one?
-ifneq ($(filter arm mips,$(dvm_arch)),)
+ifneq ($(filter arm,$(dvm_arch)),)
   LOCAL_SRC_FILES += os/android.cpp
 else
   LOCAL_SRC_FILES += os/linux.cpp
@@ -261,83 +261,11 @@ ifeq ($(dvm_arch),arm)
   endif
 endif
 
-ifeq ($(dvm_arch),mips)
-  MTERP_ARCH_KNOWN := true
-  LOCAL_C_INCLUDES += external/libffi/$(TARGET_OS)-$(TARGET_ARCH)
-  LOCAL_SHARED_LIBRARIES += libffi
-  LOCAL_SRC_FILES += \
-		arch/mips/CallO32.S \
-		arch/mips/HintsO32.cpp \
-		arch/generic/Call.cpp \
-		mterp/out/InterpC-mips.cpp \
-		mterp/out/InterpAsm-mips.S
-
-  ifeq ($(WITH_JIT),true)
-    dvm_arch_variant := mips
-    LOCAL_SRC_FILES += \
-		compiler/codegen/mips/RallocUtil.cpp \
-		compiler/codegen/mips/$(dvm_arch_variant)/Codegen.cpp \
-		compiler/codegen/mips/$(dvm_arch_variant)/CallingConvention.S \
-		compiler/codegen/mips/Assemble.cpp \
-		compiler/codegen/mips/ArchUtility.cpp \
-		compiler/codegen/mips/LocalOptimizations.cpp \
-		compiler/codegen/mips/GlobalOptimizations.cpp \
-		compiler/template/out/CompilerTemplateAsm-$(dvm_arch_variant).S
-  endif
-endif
-
-ifeq ($(dvm_arch),x86)
-  ifeq ($(dvm_os),linux)
-    MTERP_ARCH_KNOWN := true
-    LOCAL_CFLAGS += -DDVM_JMP_TABLE_MTERP=1 \
-                    -DMTERP_STUB
-    LOCAL_SRC_FILES += \
-		arch/$(dvm_arch_variant)/Call386ABI.S \
-		arch/$(dvm_arch_variant)/Hints386ABI.cpp \
-		mterp/out/InterpC-$(dvm_arch_variant).cpp \
-		mterp/out/InterpAsm-$(dvm_arch_variant).S
-    ifeq ($(WITH_JIT),true)
-      LOCAL_CFLAGS += -DARCH_IA32
-      LOCAL_SRC_FILES += \
-                compiler/codegen/x86/LowerAlu.cpp \
-                compiler/codegen/x86/LowerConst.cpp \
-                compiler/codegen/x86/LowerMove.cpp \
-                compiler/codegen/x86/Lower.cpp \
-                compiler/codegen/x86/LowerHelper.cpp \
-                compiler/codegen/x86/LowerJump.cpp \
-                compiler/codegen/x86/LowerObject.cpp \
-                compiler/codegen/x86/AnalysisO1.cpp \
-                compiler/codegen/x86/BytecodeVisitor.cpp \
-                compiler/codegen/x86/NcgAot.cpp \
-                compiler/codegen/x86/CodegenInterface.cpp \
-                compiler/codegen/x86/LowerInvoke.cpp \
-                compiler/codegen/x86/LowerReturn.cpp \
-                compiler/codegen/x86/NcgHelper.cpp \
-                compiler/codegen/x86/LowerGetPut.cpp
-
-      # need apache harmony x86 encoder/decoder
-      LOCAL_C_INCLUDES += \
-                dalvik/vm/compiler/codegen/x86/libenc
-      LOCAL_SRC_FILES += \
-                compiler/codegen/x86/libenc/enc_base.cpp \
-                compiler/codegen/x86/libenc/dec_base.cpp \
-                compiler/codegen/x86/libenc/enc_wrapper.cpp \
-                compiler/codegen/x86/libenc/enc_tabl.cpp
-
-    endif
-  endif
-endif
-
 ifeq ($(MTERP_ARCH_KNOWN),false)
   # unknown architecture, try to use FFI
   LOCAL_C_INCLUDES += external/libffi/$(dvm_os)-$(dvm_arch)
 
-  ifeq ($(dvm_os)-$(dvm_arch),darwin-x86)
-      # OSX includes libffi, so just make the linker aware of it directly.
-      LOCAL_LDLIBS += -lffi
-  else
-      LOCAL_SHARED_LIBRARIES += libffi
-  endif
+  LOCAL_SHARED_LIBRARIES += libffi
 
   LOCAL_SRC_FILES += \
 		arch/generic/Call.cpp \
