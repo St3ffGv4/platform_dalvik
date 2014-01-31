@@ -58,6 +58,8 @@ static unsigned int heapIdeaFree = HEAP_IDEAL_FREE_DEFAULT;
  */
 #define CONCURRENT_MIN_FREE (CONCURRENT_START + (128 << 10))
 
+static unsigned int concurrentStart = CONCURRENT_START;
+
 #define HS_BOILERPLATE() \
     do { \
         assert(gDvm.gcHeap != NULL); \
