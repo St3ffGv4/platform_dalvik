@@ -108,6 +108,7 @@ typedef struct CompilerWorkOrder {
 /* Chain cell for predicted method invocation */
 typedef struct PredictedChainingCell {
     u4 branch;                  /* Branch to chained destination */
+    u4 branch2;                 /* IA32 branch instr may be > 32 bits */
     const ClassObject *clazz;   /* key for prediction */
     const Method *method;       /* to lookup native PC from dalvik PC */
     const ClassObject *stagedClazz;   /* possible next key for prediction */
